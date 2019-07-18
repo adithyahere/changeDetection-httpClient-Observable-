@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
-
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { ProductData } from './products/product-data';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { ROUTING } from './app-routing.module';
 
@@ -23,15 +21,17 @@ import { SharedModule } from './shared/shared.module';
 import { ProductEditComponent } from './products/product-edit/product-edit.component';
 import { ProductTableComponent } from './products/product-table/product-table.component';
 
+const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
+
 @NgModule({
   imports: [
     BrowserModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(ProductData),
     ROUTING,
     UserModule,
     SharedModule,
-    VirtualScrollerModule
+    VirtualScrollerModule,
+    SocketIoModule.forRoot(config)
   ],
   declarations: [
     AppComponent,

@@ -18,10 +18,10 @@ const appRoutes: Routes = [
     component: ShellComponent,
     children: [
       { path: 'welcome', component: WelcomeComponent },
-      { path: 'products', canActivate: [AuthGuard], component: ProductListComponent },
-      { path: 'product-grid', canActivate: [AuthGuard], component: ProductGridComponent },
+      { path: 'products',  component: ProductListComponent },
+      { path: 'product-grid', component: ProductGridComponent },
       { path: 'product-table', component: ProductTableComponent },
-      { path: 'product-chart', component: ProductChartComponent },
+      { path: 'product-chart', canActivate: [AuthGuard], component: ProductChartComponent },
       { path: '', redirectTo: 'welcome', pathMatch: 'full' },
     ]
   },

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import { Socket } from 'ngx-socket-io';
 import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 
@@ -19,13 +19,38 @@ export class ProductService {
     private productListSource = new BehaviorSubject<Product[] | null>(null);
     productListChanges$ = this.productListSource.asObservable();
 
-    constructor(private http: HttpClient) { }
+    productsList;
+
+    constructor(private http: HttpClient, private socket: Socket) { }
 
     changeSelectedProduct(selectedProduct: Product | null): void {
         this.selectedProductSource.next(selectedProduct);
     }
 
     getProducts(): Observable<Product[]> {
+        this.socket.emit('products');
+        return this.socket.fromEvent<Product[]>('documents');
+    }
+
+    getDocument(id: string) {
+        this.socket.emit('getDoc', id);
+    }
+
+    createProduct(product: Product) {
+        this.socket.emit('addDoc', product);
+        return this.socket.fromEvent<Product>('product');
+    }
+
+    updateProduct(product: Product) {
+        this.socket.emit('editDoc', product);
+        return this.socket.fromEvent<Product>('product');
+    }
+    deleteProduct(product: Product) {
+        this.socket.emit('deleteDoc', product);
+        return null;
+    }
+
+    getProducts1(): Observable<Product[]> {
         if (this.products) {
             return of(this.products);
         }
@@ -45,11 +70,12 @@ export class ProductService {
             productCode: 'New',
             description: '',
             starRating: 0,
-            value: 200
+            date: new Date(),
+            value: 200,
         };
     }
 
-    createProduct(product: Product): Observable<Product> {
+    createProduct1(product: Product): Observable<Product> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         product.id = null;
         return this.http.post<Product>(this.productsUrl, product, { headers: headers })
@@ -63,7 +89,7 @@ export class ProductService {
             );
     }
 
-    deleteProduct(id: number): Observable<{}> {
+    deleteProduct1(id: number): Observable<{}> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         const url = `${this.productsUrl}/${id}`;
         return this.http.delete<Product>(url, { headers: headers })
@@ -80,7 +106,7 @@ export class ProductService {
             );
     }
 
-    updateProduct(product: Product): Observable<Product> {
+    updateProduct1(product: Product): Observable<Product> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         const url = `${this.productsUrl}/${product.id}`;
         return this.http.put<Product>(url, product, { headers: headers })

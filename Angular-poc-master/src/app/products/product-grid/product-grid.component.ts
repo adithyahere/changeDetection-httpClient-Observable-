@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Product } from '../product';
 import { ProductService } from '../product.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 @Component({
     selector: 'pm-product-grid',
@@ -18,22 +18,15 @@ export class ProductGridComponent implements OnInit, OnDestroy {
     constructor(private productService: ProductService, private ref: ChangeDetectorRef) { }
 
     ngOnInit() {
-        this.productService.getProducts().subscribe(
+        this.sub = this.productService.getProducts().subscribe(
             (products: Product[]) => {
                 this.products = products;
+                console.log('Grid comp: this.products: ', this.products);
                 this.ref.detectChanges();
             },
             (err: any) => this.errorMessage = err.error
         );
 
-        this.sub = this.productService.productListChanges$.subscribe(
-            (products) => {
-                if (!!products) {
-                    this.products = products;
-                    this.ref.detectChanges();
-                }
-            }
-        );
     }
 
     ngOnDestroy(): void {
