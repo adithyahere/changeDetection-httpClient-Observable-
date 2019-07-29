@@ -32,8 +32,14 @@ export class ProductService {
         return this.socket.fromEvent<Product[]>('documents');
     }
 
-    getDocument(id: string) {
-        this.socket.emit('getDoc', id);
+    getBulkData(): Observable<any> {
+        this.socket.emit('getBulkData');
+        return this.socket.fromEvent<any>('bulk');
+    }
+
+    getSelectedPageData(pageSize = 10, page = 1): Observable<any> {
+        this.socket.emit('sendPageReq', { pageSize, page });
+        return this.socket.fromEvent<any>('getPageData');
     }
 
     createProduct(product: Product) {
@@ -45,9 +51,10 @@ export class ProductService {
         this.socket.emit('editDoc', product);
         return this.socket.fromEvent<Product>('product');
     }
+
     deleteProduct(product: Product) {
         this.socket.emit('deleteDoc', product);
-        return null;
+        return this.socket.fromEvent<Product>('delItem');
     }
 
     getProducts1(): Observable<Product[]> {

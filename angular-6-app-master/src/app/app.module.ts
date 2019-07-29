@@ -3,8 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ProductListModule } from 'ram-product-list';
-
+import { ProductGridModule } from 'ram-product-grid';
 
 import { ROUTING } from './app-routing.module';
 
@@ -21,8 +22,11 @@ import { ProductGridComponent } from './products/product-grid/product-grid.compo
 import { ProductChartComponent } from './products/product-chart/product-chart.component';
 import { SharedModule } from './shared/shared.module';
 import { ProductEditComponent } from './products/product-edit/product-edit.component';
-import { ProductTableComponent } from './products/product-table/product-table.component';
-import { ProductLibraryComponent } from './products/product-library/product-library.component';
+import { ProductTableComponent } from './products/table-view/product-table/product-table.component';
+import { ProductLibraryComponent } from './products/table-view/product-library/product-library.component';
+import { ProductPaginationComponent } from './products/table-view/product-pagination/product-pagination.component';
+import { TableViewComponent } from './products/table-view/table-view.component';
+import { ServerSidePagingComponent } from './products/table-view/server-side-paging/server-side-paging.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
 
@@ -35,7 +39,9 @@ const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
     SharedModule,
     VirtualScrollerModule,
     SocketIoModule.forRoot(config),
-    ProductListModule
+    ProductListModule,
+    ProductGridModule,
+    NgxPaginationModule
   ],
   declarations: [
     AppComponent,
@@ -49,7 +55,10 @@ const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
     ProductChartComponent,
     PageNotFoundComponent,
     ProductTableComponent,
-    ProductLibraryComponent
+    ProductLibraryComponent,
+    ProductPaginationComponent,
+    TableViewComponent,
+    ServerSidePagingComponent
   ],
   bootstrap: [AppComponent]
 })
